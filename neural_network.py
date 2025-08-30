@@ -43,10 +43,39 @@ learn_rate = -0.01
 out_ideal = np.zeros(out_data.shape, dtype=float)
 out_ideal[0, train_labels[1]] = 1
 
+# output layer to hidden layers
 error = out_ideal - out_data
-hl_weights[(hl_count-1)*hl_size:(hl_count-1)*hl_size+out_size] -= learn_rate * (np.array([hidden_layers[0, 2]]).T @ error).T
+# hl_weights[(hl_count-1)*hl_size:(hl_count-1)*hl_size+out_size] -= learn_rate * (np.array([hidden_layers[0, 2]]).T @ error).T
+hl_weights[20:30] -= learn_rate * (np.array([hidden_layers[0, 2]]).T @ error).T
 out_biases -= learn_rate * error
 h = hidden_layers[0, 2]
 derivative = np.array([h * (1 - h)])
-delta_h = error @ hl_weights[(hl_count-1)*hl_size:(hl_count-1)*hl_size+out_size] * derivative
-print(delta_h)
+# delta_h = error @ hl_weights[(hl_count-1)*hl_size:(hl_count-1)*hl_size+out_size] * derivative
+delta_h = error @ hl_weights[20:30] * derivative
+# print(delta_h[0])
+
+# hidden layers
+hl_weights[10:20] -= learn_rate * (np.array([hidden_layers[0, 1]]).T @ delta_h).T
+# print(hidden_layers[1, 2])
+hidden_layers[1, 2] -= learn_rate * delta_h[0]
+h = hidden_layers[0, 1]
+derivative = derivative = np.array([h * (1 - h)])
+delta_h = delta_h @ hl_weights[10:20] * derivative
+# print(delta_h)
+# print(hidden_layers[1, 2])
+
+hl_weights[0:10] -= learn_rate * (np.array([hidden_layers[0, 0]]).T @ delta_h).T
+hidden_layers[1, 1] -=  learn_rate * delta_h[0]
+h = hidden_layers[0, 0]
+derivative = np.array([h * (1 - h)])
+delta_h = delta_h @ hl_weights[0:10] * derivative
+# print(delta_h)
+
+# hidden layers to input layer
+# print(input_data)
+# print(input_data.shape)
+# print((input_data.T @ delta_h).shape)
+# print(in_to_hl_weights.shape)
+print(in_to_hl_weights)
+in_to_hl_weights -= 1000 * input_data.T @ delta_h
+print(in_to_hl_weights)
