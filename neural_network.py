@@ -80,15 +80,19 @@ nn = NeuralNet(784, 10, 3, 10)
 
 # Write an algorithm to train the neural network on each training example in the MNIST database
 # Loop through each training example
-# Call the train method
+# Call the train_on_input method
 
+for i in range(train_images.shape[0]):
+    training_input = train_images[i]
+    training_output = train_labels[i]
+    nn.train_on_input(training_input, training_output)
 
 total_correct = 0
 print(test_images.shape)
 
 for i in range(test_images.shape[0]):
-    testing_input = train_images[i]
-    testing_output = train_labels[i]
+    testing_input = test_images[i]
+    testing_output = test_labels[i]
     output = nn.forward_prop(testing_input)
     print(f"Ideal: {testing_output} | Real: {np.argmax(output)}")
     
